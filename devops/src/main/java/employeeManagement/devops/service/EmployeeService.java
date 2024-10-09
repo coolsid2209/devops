@@ -6,6 +6,7 @@ import employeeManagement.devops.data.EmployeeRepository;
 import employeeManagement.devops.entity.Employee;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EmployeeService {
@@ -16,22 +17,23 @@ public class EmployeeService {
     }
 
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        return employeeRepository.fetchAllEmployee();
     }
 
-    public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id);
+    public Employee getEmployeeById(UUID id) {
+        Employee employee = employeeRepository.findEmployeeById(id);
+        return employee;
     }
 
     public void createEmployee(Employee employee) {
-        employeeRepository.save(employee);
+        employeeRepository.insertEmployee(employee);
     }
 
     public void updateEmployee(Employee employee) {
-        employeeRepository.update(employee);
+        employeeRepository.updateEmployee(employee);
     }
 
     public void deleteEmployee(Long id) {
-        employeeRepository.deleteById(id);
+        employeeRepository.deleteEmployeeById(id);
     }
 }

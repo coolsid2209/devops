@@ -7,6 +7,7 @@ import employeeManagement.devops.entity.Employee;
 import employeeManagement.devops.service.EmployeeService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -23,7 +24,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable Long id) {
+    public Employee getEmployeeById(@PathVariable UUID id) {
         return employeeService.getEmployeeById(id);
     }
 
@@ -34,7 +35,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+    public ResponseEntity<String> updateEmployee(@PathVariable UUID id, @RequestBody Employee employee) {
         employee.setId(id);
         employeeService.updateEmployee(employee);
         return ResponseEntity.ok("Employee updated successfully");
