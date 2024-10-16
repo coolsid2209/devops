@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-EmployeeManagementApplication<devops>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "employeeManagement.devops.EmployeeManagementApplication",
+            "projectName": "devops",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
