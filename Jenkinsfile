@@ -1,55 +1,56 @@
 pipeline {
-    agent any  // Use any available agent
-
+    agent any
+    
     environment {
-        // Optional: Define any environment variables
-        JAVA_HOME = '/usr/lib/jvm/java-11-openjdk' // Adjust based on your Java installation
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+        NODE_VERSION = '14'
+        // Define the EC2 instance details
+        EC2_USER = 'ec2-user'
+        EC2_IP = '13.235.70.47' // Replace with your EC2 instance IP
+        PEM_FILE = '/Users/siddharthkumar/Downloads/devops_jenkins_aws.pem' // Update with your key file
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the repository
+                // Checkout the code from GitHub
                 git 'https://github.com/coolsid2209/devops.git'
             }
         }
 
         stage('Build') {
             steps {
-                // Use Maven to build the project
-                sh 'mvn clean package' // Clean and package the application
+                // Run Maven commands to build the project
+                sh './mvnw clean install' // Maven clean and install
+                sh './mvnw test' // Run tests
             }
         }
 
-        stage('Test') {
+        stage('Package') {
             steps {
-                // Run tests using Maven
-                sh 'mvn test' // Run the test command
+                // Package the Spring Boot application
+                sh './mvnw package'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to AWS EC2') {
             steps {
-                // Example of deploying the application
-                echo 'Deploying to production...'
-                // Add your deployment command here (e.g., using SSH, Docker, etc.)
+                // Copy the JAR file to the EC2 instance
+                sshagent(['devops-ec2-user]) { // You need to configure SSH key in Jenkins
+                    sh '''
+                        scp -o StrictHostKeyChecking=no target/devops-0.0.1-SNAPSHOT.jar ${EC2_USER}@${13.235.70.47}:/home/${EC2_USER}/
+                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'java -jar /home/${EC2_USER}/devops-0.0.1-SNAPSHOT.jar &'
+                    '''
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline succeeded!'
-            // Optional: Notify team (e.g., via email, Slack, etc.)
+            echo 'Deployment succeeded!'
         }
         failure {
-            echo 'Pipeline failed.'
-            // Optional: Send notifications on failure
-        }
-        always {
-            echo 'Cleaning up...'
-            // Optional: Always execute cleanup steps, such as archiving artifacts
+            echo 'Deployment failed.'
         }
     }
 }
