@@ -38,7 +38,7 @@ pipeline {
                 sshagent(['devops-ec2-user]) { // You need to configure SSH key in Jenkins
                     sh '''
                         scp -o StrictHostKeyChecking=no target/devops-0.0.1-SNAPSHOT.jar ${EC2_USER}@${13.235.70.47}:/home/${EC2_USER}/
-                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} 'java -jar /home/${EC2_USER}/devops-0.0.1-SNAPSHOT.jar &'
+                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${13.235.70.47} 'java -jar /home/${EC2_USER}/devops-0.0.1-SNAPSHOT.jar &'
                     '''
                 }
             }
